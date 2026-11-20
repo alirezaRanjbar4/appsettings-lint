@@ -1,0 +1,22 @@
+name: Bug report
+description: Report a reproducible configuration check or CLI problem.
+body:
+  - type: textarea
+    id: sample
+    attributes:
+      label: Minimal redacted JSON and command
+      description: Replace every real credential and private host with synthetic values.
+    validations:
+      required: true
+  - type: textarea
+    id: behavior
+    attributes:
+      label: Expected and actual behavior
+    validations:
+      required: true
+  - type: input
+    id: environment
+    attributes:
+      label: Tool version, .NET version, and operating system
+    validations:
+      required: true

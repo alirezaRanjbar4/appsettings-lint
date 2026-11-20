@@ -1,0 +1,9 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/AppSettingsLint.Cli/AppSettingsLint.Cli.csproj" />
+    <Project Path="src/AppSettingsLint.Core/AppSettingsLint.Core.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/AppSettingsLint.Tests/AppSettingsLint.Tests.csproj" />
+  </Folder>
+</Solution>

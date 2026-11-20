@@ -1,0 +1,15 @@
+name: Feature request
+description: Describe a concrete configuration mistake you want to catch.
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem and minimal redacted example
+    validations:
+      required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Expected diagnostic or workflow
+    validations:
+      required: true
