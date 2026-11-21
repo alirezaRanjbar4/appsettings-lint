@@ -2,6 +2,8 @@
 
 Bug reports, small fixes, and real-world configuration examples are welcome.
 
+Read the [design guide](docs/DESIGN.md) for CLI/Core boundaries, source walking, overlays, and the bounded first scope. The [troubleshooting guide](docs/TROUBLESHOOTING.md) covers installation and common reports. Keep both guides and their commands consistent when changing behavior.
+
 1. Check existing issues and explain the problem before proposing a large feature.
 2. Share only small, synthetic or redacted JSON samples. Never paste credentials.
 3. Add regression tests for changed lint behavior and CLI exit codes.
