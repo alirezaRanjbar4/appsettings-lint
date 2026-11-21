@@ -20,9 +20,9 @@ dotnet run --project src/AppSettingsLint.Cli -- examples/invalid.json --require 
 Expected output (exit code `1`):
 
 ```text
-examples/invalid.json: error ASL002 [Logging:LogLevel:default] Duplicate configuration key (case-insensitive, flattened path).
-examples/invalid.json: error ASL005 [Api:BaseUrl] Required setting is null or blank.
-examples/invalid.json: warning ASL006 [Api:Token] Unresolved placeholder in the effective value.
+examples/invalid.json(3,56): error ASL002 [Logging:LogLevel:default] Duplicate configuration key (case-insensitive, flattened path). Original occurrence: (3,30).
+examples/invalid.json(2,12): error ASL005 [Api:BaseUrl] Required setting is null or blank.
+examples/invalid.json(2,27): warning ASL006 [Api:Token] Unresolved placeholder in the effective value.
 Checked 1 file(s), 3 effective key(s): 2 error(s), 1 warning(s).
 ```
 
@@ -36,10 +36,10 @@ This passes: the production file replaces the base `${API_TOKEN}` placeholder. T
 
 ## Install as a .NET tool
 
-Download `AppSettingsLint.Tool.0.1.1.nupkg` from the [v0.1.1 release](https://github.com/alirezaRanjbar4/appsettings-lint/releases/tag/v0.1.1) into an empty folder, then run:
+Download `AppSettingsLint.Tool.0.2.0.nupkg` from the [v0.2.0 release](https://github.com/alirezaRanjbar4/appsettings-lint/releases/tag/v0.2.0) into an empty folder, then run:
 
 ```sh
-dotnet tool install --global AppSettingsLint.Tool --version 0.1.1 --add-source ./downloaded-package
+dotnet tool install --global AppSettingsLint.Tool --version 0.2.0 --add-source ./downloaded-package
 appsettings-lint appsettings.json appsettings.Production.json --require ConnectionStrings:Main --strict
 ```
 
@@ -47,7 +47,7 @@ Or build the package from source:
 
 ```sh
 dotnet pack src/AppSettingsLint.Cli -c Release -o ./artifacts
-dotnet tool install --global AppSettingsLint.Tool --version 0.1.1 --add-source ./artifacts
+dotnet tool install --global AppSettingsLint.Tool --version 0.2.0 --add-source ./artifacts
 ```
 
 The package is distributed through GitHub Releases. It is **not currently published on NuGet.org**.
@@ -87,6 +87,26 @@ appsettings-lint appsettings.json --require Api:BaseUrl --format json
 ```
 
 The JSON report contains `filesChecked`, `keysChecked`, `diagnostics`, `errors`, and `warnings`. Each diagnostic has a code, severity, file, optional key, and a value-free message.
+
+## Source locations
+
+ASL002, ASL005, and ASL006 include a `location` object with 1-based `line` and `column`. Duplicate findings additionally include `originalLocation`, pointing to the first occurrence in the same file. The fields are additive; unavailable locations are null. Codes, severity rules, exit codes, and report counts remain unchanged.
+
+```json
+{
+  "code": "ASL006",
+  "severity": "warning",
+  "file": "appsettings.json",
+  "key": "Api:Token",
+  "message": "Unresolved placeholder in the effective value.",
+  "location": { "line": 2, "column": 27 },
+  "originalLocation": null
+}
+```
+
+Locations identify the opening quote of the source property name, or the start of a directly indexed array value. For overlays, warnings and blank required findings point into the winning file. Nested and colon-containing keys keep their separate source positions even when they flatten to the same configuration key.
+
+Columns count Unicode scalar values, not UTF-8 bytes or UTF-16 surrogate units; tabs count as one column. Line counting supports LF and CRLF, and a file's encoding BOM is excluded. Escaped property names are decoded for key identity while coordinates refer to their original written form. Parser syntax errors retain their existing byte-position message. No values or source snippets are added to diagnostics.
 
 ## Add to CI
 

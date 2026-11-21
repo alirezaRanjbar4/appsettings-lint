@@ -26,7 +26,7 @@ public static class CliApplication
                     output.WriteLine(Help);
                     return 0;
                 case "--version":
-                    output.WriteLine("0.1.1");
+                    output.WriteLine("0.2.0");
                     return 0;
                 case "--":
                     positionalOnly = true;
@@ -66,8 +66,12 @@ public static class CliApplication
         else
         {
             foreach (var diagnostic in report.Diagnostics)
-                output.WriteLine($"{diagnostic.File}: {diagnostic.Severity} {diagnostic.Code}" +
-                    (diagnostic.Key is null ? "" : $" [{diagnostic.Key}]") + $" {diagnostic.Message}");
+            {
+                var position = diagnostic.Location is { } location ? $"({location.Line},{location.Column})" : "";
+                var original = diagnostic.OriginalLocation is { } first ? $" Original occurrence: ({first.Line},{first.Column})." : "";
+                output.WriteLine($"{diagnostic.File}{position}: {diagnostic.Severity} {diagnostic.Code}" +
+                    (diagnostic.Key is null ? "" : $" [{diagnostic.Key}]") + $" {diagnostic.Message}{original}");
+            }
             output.WriteLine($"Checked {report.FilesChecked} file(s), {report.KeysChecked} effective key(s): {report.Errors} error(s), {report.Warnings} warning(s).");
         }
         return report.Errors > 0 || (strict && report.Warnings > 0) ? 1 : 0;

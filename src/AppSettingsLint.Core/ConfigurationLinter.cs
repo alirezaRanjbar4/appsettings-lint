@@ -1,11 +1,12 @@
 using System.Text.Json;
+using System.Text;
 using System.Text.RegularExpressions;
 
 namespace AppSettingsLint.Core;
 
 public static partial class ConfigurationLinter
 {
-    private sealed record Setting(string? Value, string File);
+    private sealed record Setting(string? Value, string File, SourceLocation Location);
 
     public static LintReport Lint(IEnumerable<string> files, IEnumerable<string>? requiredKeys = null)
     {
@@ -18,7 +19,8 @@ public static partial class ConfigurationLinter
             filesChecked++;
             try
             {
-                using var document = JsonDocument.Parse(File.ReadAllText(file), new JsonDocumentOptions
+                var text = File.ReadAllText(file);
+                using var document = JsonDocument.Parse(text, new JsonDocumentOptions
                 {
                     AllowTrailingCommas = true,
                     CommentHandling = JsonCommentHandling.Skip
@@ -29,7 +31,15 @@ public static partial class ConfigurationLinter
                     continue;
                 }
                 var current = new Dictionary<string, Setting>(StringComparer.OrdinalIgnoreCase);
-                Visit(document.RootElement, null, file, current, diagnostics);
+                var source = Encoding.UTF8.GetBytes(text);
+                var reader = new Utf8JsonReader(source, new JsonReaderOptions
+                {
+                    AllowTrailingCommas = true,
+                    CommentHandling = JsonCommentHandling.Skip
+                });
+                reader.Read();
+                var coordinates = new SourceCoordinates(source);
+                Visit(ref reader, null, coordinates.At(reader.TokenStartIndex), coordinates, file, current, diagnostics);
                 foreach (var (key, value) in current)
                     effective[key] = value;
             }
@@ -49,43 +59,56 @@ public static partial class ConfigurationLinter
             if (!effective.TryGetValue(key, out var setting))
                 diagnostics.Add(new("ASL004", "error", "(effective configuration)", key, "Required setting is missing. Use a leaf key, such as Database:Host."));
             else if (string.IsNullOrWhiteSpace(setting.Value))
-                diagnostics.Add(new("ASL005", "error", setting.File, key, "Required setting is null or blank."));
+                diagnostics.Add(new("ASL005", "error", setting.File, key, "Required setting is null or blank.", setting.Location));
         }
         foreach (var (key, setting) in effective.OrderBy(pair => pair.Key, StringComparer.OrdinalIgnoreCase))
         {
             if (setting.Value is { } value &&
                 (PlaceholderPattern().IsMatch(value) || value.Trim().Equals("CHANGE_ME", StringComparison.OrdinalIgnoreCase)))
-                diagnostics.Add(new("ASL006", "warning", setting.File, key, "Unresolved placeholder in the effective value."));
+                diagnostics.Add(new("ASL006", "warning", setting.File, key, "Unresolved placeholder in the effective value.", setting.Location));
         }
         return new(filesChecked, effective.Count, diagnostics);
     }
 
-    private static void Visit(JsonElement element, string? path, string file,
+    private static void Visit(ref Utf8JsonReader reader, string? path, SourceLocation location, SourceCoordinates coordinates, string file,
         Dictionary<string, Setting> settings, List<Diagnostic> diagnostics)
     {
-        if (element.ValueKind == JsonValueKind.Object && element.EnumerateObject().Any())
+        string? value = null;
+        if (reader.TokenType == JsonTokenType.StartObject)
         {
-            foreach (var property in element.EnumerateObject())
-                Visit(property.Value, path is null ? property.Name : $"{path}:{property.Name}", file, settings, diagnostics);
-            return;
+            var hasChildren = false;
+            while (reader.Read() && reader.TokenType != JsonTokenType.EndObject)
+            {
+                hasChildren = true;
+                var name = reader.GetString()!;
+                var propertyLocation = coordinates.At(reader.TokenStartIndex);
+                reader.Read();
+                Visit(ref reader, path is null ? name : $"{path}:{name}", propertyLocation, coordinates, file, settings, diagnostics);
+            }
+            if (hasChildren) return;
         }
-        if (element.ValueKind == JsonValueKind.Array && element.GetArrayLength() > 0)
+        else if (reader.TokenType == JsonTokenType.StartArray)
         {
             var index = 0;
-            foreach (var item in element.EnumerateArray())
-                Visit(item, $"{path}:{index++}", file, settings, diagnostics);
-            return;
+            while (reader.Read() && reader.TokenType != JsonTokenType.EndArray)
+            {
+                var itemLocation = coordinates.At(reader.TokenStartIndex);
+                Visit(ref reader, $"{path}:{index++}", itemLocation, coordinates, file, settings, diagnostics);
+            }
+            if (index > 0) return;
         }
+        else
+            value = reader.TokenType switch
+            {
+                JsonTokenType.String => reader.GetString(),
+                JsonTokenType.Null => null,
+                _ => Encoding.UTF8.GetString(reader.ValueSpan)
+            };
+
         if (path is null)
             return;
-        var value = element.ValueKind switch
-        {
-            JsonValueKind.String => element.GetString(),
-            JsonValueKind.Null or JsonValueKind.Object or JsonValueKind.Array => null,
-            _ => element.GetRawText()
-        };
-        if (!settings.TryAdd(path, new(value, file)))
-            diagnostics.Add(new("ASL002", "error", file, path, "Duplicate configuration key (case-insensitive, flattened path)."));
+        if (!settings.TryAdd(path, new(value, file, location)))
+            diagnostics.Add(new("ASL002", "error", file, path, "Duplicate configuration key (case-insensitive, flattened path).", location, settings[path].Location));
     }
 
     [GeneratedRegex(@"\$\{[^{}]+\}|#\{[^{}]+\}#|\{\{[^{}]+\}\}", RegexOptions.CultureInvariant)]

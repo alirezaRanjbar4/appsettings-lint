@@ -16,9 +16,14 @@ Added 12 fixtures against the actual .NET 10 JSON provider and documented the in
 
 ## Next, driven by feedback
 
-- Add source line/column locations for duplicate-key and placeholder findings without exposing values.
+- Complete concise architecture and troubleshooting guides for the bounded first stable scope.
 - Extend provider fixtures when new edge cases are reported.
 - Improve installation discovery and consider NuGet.org distribution when publishing credentials are available.
 - Evaluate SARIF output for GitHub code scanning if users need it.
 
 Features are planned, not promises of release dates. Please describe a concrete use case in an issue.
+
+## Delivered in v0.2.0
+
+- Source locations for duplicate-key, placeholder, and blank-required findings, including original duplicate occurrences.
+- Additive JSON coordinates and Unicode-aware text diagnostics, with regression tests for overlays and flattened collisions.
