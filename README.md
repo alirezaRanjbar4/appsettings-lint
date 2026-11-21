@@ -36,10 +36,10 @@ This passes: the production file replaces the base `${API_TOKEN}` placeholder. T
 
 ## Install as a .NET tool
 
-Download `AppSettingsLint.Tool.0.1.0.nupkg` from the [v0.1.0 release](https://github.com/alirezaRanjbar4/appsettings-lint/releases/tag/v0.1.0) into an empty folder, then run:
+Download `AppSettingsLint.Tool.0.1.1.nupkg` from the [v0.1.1 release](https://github.com/alirezaRanjbar4/appsettings-lint/releases/tag/v0.1.1) into an empty folder, then run:
 
 ```sh
-dotnet tool install --global AppSettingsLint.Tool --version 0.1.0 --add-source ./downloaded-package
+dotnet tool install --global AppSettingsLint.Tool --version 0.1.1 --add-source ./downloaded-package
 appsettings-lint appsettings.json appsettings.Production.json --require ConnectionStrings:Main --strict
 ```
 
@@ -47,7 +47,7 @@ Or build the package from source:
 
 ```sh
 dotnet pack src/AppSettingsLint.Cli -c Release -o ./artifacts
-dotnet tool install --global AppSettingsLint.Tool --version 0.1.0 --add-source ./artifacts
+dotnet tool install --global AppSettingsLint.Tool --version 0.1.1 --add-source ./artifacts
 ```
 
 The package is distributed through GitHub Releases. It is **not currently published on NuGet.org**.
@@ -100,6 +100,12 @@ After installing the tool in your build job:
 Only require values that should exist **in the supplied JSON files**. Environment variables, user secrets, Key Vault, command-line configuration, and custom providers are not loaded. The tool does not validate options binding, value types, URLs, or connectivity, and does not replace startup validation.
 
 For .NET provider behavior, see Microsoft's [configuration provider documentation](https://learn.microsoft.com/dotnet/core/extensions/configuration-providers).
+
+## Compatibility fixtures
+
+The test suite checks key flattening, comments, trailing commas, null/empty values, case-insensitive and colon-path collisions, empty property names, and file/array overlays against `Microsoft.Extensions.Configuration.Json 10.0.15` (test dependency only). The CLI retains zero runtime package dependencies. The provider stores an empty object as null and an empty array as an empty string; both are blank for this tool's required-value check.
+
+One intentional lint difference: repeated empty objects/arrays at the same flattened key are reported as ASL002, even where the provider accepts and overwrites an empty-container marker. This stricter duplicate check is useful for review; it is not a claim that every linter error causes .NET startup to fail. The checks cover local JSON, not options binding or other configuration providers.
 
 ## Development and feedback
 

@@ -26,7 +26,7 @@ public static class CliApplication
                     output.WriteLine(Help);
                     return 0;
                 case "--version":
-                    output.WriteLine("0.1.0");
+                    output.WriteLine("0.1.1");
                     return 0;
                 case "--":
                     positionalOnly = true;
