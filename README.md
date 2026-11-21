@@ -135,6 +135,8 @@ dotnet format --verify-no-changes
 dotnet pack src/AppSettingsLint.Cli -c Release -o ./artifacts
 ```
 
+For the CLI/Core boundaries, data flow, and completion scope, read the [design guide](docs/DESIGN.md). For installation, exit codes, placeholders, and coordinate interpretation, use the [troubleshooting guide](docs/TROUBLESHOOTING.md).
+
 Have a configuration mistake this tool misses? [Open an issue](https://github.com/alirezaRanjbar4/appsettings-lint/issues/new/choose) with a **minimal, redacted** sample and the expected diagnostic. See [CONTRIBUTING.md](CONTRIBUTING.md) and the [roadmap](ROADMAP.md).
 
 ## راهنمای کوتاه فارسی

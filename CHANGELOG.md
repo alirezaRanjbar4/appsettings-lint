@@ -1,5 +1,9 @@
 # Changelog
 
+## Unreleased
+
+- Added concise architecture and troubleshooting guides, linked from README and CONTRIBUTING, with current-release installation/examples and a bounded first-scope completion checklist. Runtime behavior and package version are unchanged.
+
 ## 0.2.0 — 2026-11-21
 
 Added value-free, 1-based source coordinates for duplicate keys, placeholder warnings, and blank required settings. Duplicate findings include both occurrences; JSON fields are additive. Text diagnostics use file(line,column) locations. Coordinates handle Unicode scalars, escaped keys, comments, arrays, BOMs, CRLF, and file overlays.
