@@ -36,10 +36,10 @@ This passes: the production file replaces the base `${API_TOKEN}` placeholder. T
 
 ## Install as a .NET tool
 
-Download `AppSettingsLint.Tool.0.2.0.nupkg` from the [v0.2.0 release](https://github.com/alirezaRanjbar4/appsettings-lint/releases/tag/v0.2.0) into an empty folder, then run:
+Download `AppSettingsLint.Tool.0.2.1.nupkg` from the [v0.2.1 release](https://github.com/alirezaRanjbar4/appsettings-lint/releases/tag/v0.2.1) into an empty folder, then run:
 
 ```sh
-dotnet tool install --global AppSettingsLint.Tool --version 0.2.0 --add-source ./downloaded-package
+dotnet tool install --global AppSettingsLint.Tool --version 0.2.1 --add-source ./downloaded-package
 appsettings-lint appsettings.json appsettings.Production.json --require ConnectionStrings:Main --strict
 ```
 
@@ -47,7 +47,7 @@ Or build the package from source:
 
 ```sh
 dotnet pack src/AppSettingsLint.Cli -c Release -o ./artifacts
-dotnet tool install --global AppSettingsLint.Tool --version 0.2.0 --add-source ./artifacts
+dotnet tool install --global AppSettingsLint.Tool --version 0.2.1 --add-source ./artifacts
 ```
 
 The package is distributed through GitHub Releases. It is **not currently published on NuGet.org**.

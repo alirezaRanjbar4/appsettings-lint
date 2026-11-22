@@ -8,7 +8,7 @@
     <PackAsTool>true</PackAsTool>
     <ToolCommandName>appsettings-lint</ToolCommandName>
     <PackageId>AppSettingsLint.Tool</PackageId>
-    <Version>0.2.0</Version>
+    <Version>0.2.1</Version>
     <Authors>alirezaRanjbar4</Authors>
     <Description>Catch duplicate keys, missing required settings, and unresolved placeholders in appsettings JSON before deployment.</Description>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
@@ -21,6 +21,8 @@
   <ItemGroup>
     <ProjectReference Include="../AppSettingsLint.Core/AppSettingsLint.Core.csproj" />
     <None Include="../../README.md" Pack="true" PackagePath="/" />
+    <None Include="../../CONTRIBUTING.md;../../ROADMAP.md;../../CHANGELOG.md;../../LICENSE" Pack="true" PackagePath="/" />
+    <None Include="../../docs/*.md" Pack="true" PackagePath="docs/" />
   </ItemGroup>
 
 </Project>

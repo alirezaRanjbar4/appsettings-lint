@@ -14,13 +14,13 @@ The first release focuses on a small, dependable JSON check that can run before 
 
 Added 13 fixtures against the actual .NET 10 JSON provider and documented the intentional stricter empty-container duplicate check. CLI lint behavior is unchanged.
 
-## Documentation handoff on main
+## Delivered in v0.2.1
 
-The [design guide](docs/DESIGN.md) and [troubleshooting guide](docs/TROUBLESHOOTING.md) document the architecture, CLI/report contracts, installation, common findings, and provenance/coordinate rules. Their commands target the current published version, v0.2.0.
+The [design guide](docs/DESIGN.md) and [troubleshooting guide](docs/TROUBLESHOOTING.md) document the architecture, CLI/report contracts, installation, common findings, and provenance/coordinate rules. The tool package includes these guides and their linked root documents. Commands target v0.2.1.
 
 ## First-scope completion
 
-The bounded scope consists of the delivered JSON checks, overlays, provider fixtures, source diagnostics, and user/developer guides. A tested closing release that includes the handoff documentation is the remaining required step. Validate its packaged installation/examples and supported-platform CI before marking the first scope complete. Keep the repository available for fixes and feedback afterward.
+The bounded scope consists of the delivered JSON checks, overlays, provider fixtures, source diagnostics, and user/developer guides. [v0.2.1](https://github.com/alirezaRanjbar4/appsettings-lint/releases/tag/v0.2.1) is the closing release for that scope, with packaged installation/examples, output contracts and supported-platform CI checked as release acceptance. The project remains available for bug fixes and feedback; optional enhancements below do not reopen or extend the completed scope.
 
 ## Future candidates, driven by feedback
 
