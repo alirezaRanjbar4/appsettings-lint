@@ -1,15 +1,15 @@
 # Troubleshooting
 
-These commands target the current published package, **0.2.0**, and the repository's synthetic examples. Run from the repository root unless a command says otherwise. The [README](../README.md) lists all options and diagnostic codes; the [design guide](DESIGN.md) explains the data flow.
+These commands target the current published package, **0.2.1**, and the repository's synthetic examples. Run from the repository root unless a command says otherwise. The [README](../README.md) lists all options and diagnostic codes; the [design guide](DESIGN.md) explains the data flow.
 
 ## Installation, updates, and command discovery
 
-The package is on [GitHub Releases](https://github.com/alirezaRanjbar4/appsettings-lint/releases/tag/v0.2.0), not NuGet.org. Download `AppSettingsLint.Tool.0.2.0.nupkg` and `SHA256SUMS.txt` into an empty `downloaded-package` folder and compare its SHA-256 with the checksum file. A package-source error can mean the folder, package version, or filename is wrong. The tool requires .NET 10; check `dotnet --info` if it cannot start.
+The package is on [GitHub Releases](https://github.com/alirezaRanjbar4/appsettings-lint/releases/tag/v0.2.1), not NuGet.org. Download `AppSettingsLint.Tool.0.2.1.nupkg` and `SHA256SUMS.txt` into an empty `downloaded-package` folder and compare its SHA-256 with the checksum file. A package-source error can mean the folder, package version, or filename is wrong. The tool requires .NET 10; check `dotnet --info` if it cannot start.
 
 For an isolated installation, choose a **fresh** tool directory:
 
 ```sh
-dotnet tool install AppSettingsLint.Tool --version 0.2.0 --tool-path ./artifacts/handoff-tool --add-source ./downloaded-package
+dotnet tool install AppSettingsLint.Tool --version 0.2.1 --tool-path ./artifacts/handoff-tool --add-source ./downloaded-package
 ```
 
 Run `./artifacts/handoff-tool/appsettings-lint --version` on Linux/macOS, or `.\artifacts\handoff-tool\appsettings-lint.exe --version` in PowerShell. This avoids depending on the global tool PATH. If the global installation is not found, check `dotnet tool list --global` and whether the .NET tools directory is on PATH (`~/.dotnet/tools`, or `%USERPROFILE%\.dotnet\tools` on Windows); open a new terminal after changing PATH.
@@ -17,7 +17,7 @@ Run `./artifacts/handoff-tool/appsettings-lint --version` on Linux/macOS, or `.\
 For an **existing** isolated installation, use `update` with the same tool path:
 
 ```sh
-dotnet tool update AppSettingsLint.Tool --version 0.2.0 --tool-path ./artifacts/handoff-tool --add-source ./downloaded-package
+dotnet tool update AppSettingsLint.Tool --version 0.2.1 --tool-path ./artifacts/handoff-tool --add-source ./downloaded-package
 ```
 
 For a global installation, use `--global` in place of `--tool-path ...`. If the command still reports an older version, invoke the intended executable by its full path and check for another global/local installation. The commands below use `appsettings-lint` as shorthand for that executable.

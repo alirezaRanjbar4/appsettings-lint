@@ -1,8 +1,9 @@
 # Changelog
 
-## Unreleased
+## 0.2.1 — 2026-11-22
 
-- Added concise architecture and troubleshooting guides, linked from README and CONTRIBUTING, with current-release installation/examples and a bounded first-scope completion checklist. Runtime behavior and package version are unchanged.
+- Bundled architecture/troubleshooting guides, contribution instructions, roadmap, changelog and license in the tool package, with local Markdown links available together.
+- Updated installation/version references and completed the bounded first-scope release handoff. Lint rules, diagnostic codes and exit semantics retain the v0.2.0 behavior.
 
 ## 0.2.0 — 2026-11-21
 

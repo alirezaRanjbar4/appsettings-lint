@@ -35,4 +35,4 @@ The CLI returns `0` for success, `1` for errors or strict-mode warnings, and `2`
 
 Tests cover lint rules, CLI contracts, real-provider parity, Unicode coordinates, duplicates, and overlay provenance. CI tests, verifies formatting, and packages the CLI on Windows, Linux, and macOS. Use synthetic fixtures and keep parser errors value-free when changing behavior; see [CONTRIBUTING](../CONTRIBUTING.md).
 
-This handoff completes the documentation part of the first scope. A validated closing release is still required before marking that scope complete. Extra providers, schemas, binding checks, SARIF, and NuGet.org publishing remain optional future work, not prerequisites. See the [roadmap](../ROADMAP.md).
+v0.2.1 is the closing release for this bounded scope and bundles the guides with their linked root documents. Release acceptance checks package installation/examples, diagnostic/exit contracts and supported-platform CI. The repository remains supported for fixes and feedback. Extra providers, schemas, binding checks, SARIF, and NuGet.org publishing remain optional future work. See the [roadmap](../ROADMAP.md).
